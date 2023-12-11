@@ -2,11 +2,10 @@ import random
 
 
 class Sheep:
-    def __init__(self, sid, x, y, move_dist):
+    def __init__(self, sid, x, y):
         self.sid = sid
         self.x = x
         self.y = y
-        self.move_dist = move_dist
         self.is_live = True
 
     def sheep_move(self, dist):

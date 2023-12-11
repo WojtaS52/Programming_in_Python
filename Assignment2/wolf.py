@@ -11,7 +11,7 @@ class Wolf:
         return dist
 
     def move_wolf(self, sheeps_list, wolf_step):
-        nearest_sheep = min(sheeps_list)
+        nearest_sheep = min(sheeps_list, key=lambda sheep: self.distance_to_the_nearest_sheep(sheep))
 
         if nearest_sheep:
 
