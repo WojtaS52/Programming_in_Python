@@ -1,16 +1,27 @@
-import math
-
 from wolf import Wolf
 from sheep import Sheep
 import random
 import json
 import csv
+import math
 
 
 class Simulation:
     def __init__(self, number_of_sheep: int, limit: float, wolf_step: float, sheep_step: float, max_rounds: int):
-        print(f"Start simulation")
-        # self.sheep_list = [Sheep(i, random.uniform(-limit, limit), random.uniform(-limit, limit)) for i in range(1, number_of_sheep + 1)]
+        print('Start simulation')
+
+        # if type(number_of_sheep) is not int:
+        #     raise Exception('Number of sheep must be an int')
+        #
+        # if type(number_of_sheep) is not int:
+        #     raise Exception('Number of sheep must be an int')
+        #
+        # if number_of_sheep <= 0:
+        #     raise Exception('Number of sheep should be positive')
+        #
+        # if max_rounds <= 0:
+        #     raise Exception('Max number of rounds should be positive')
+
         self.sheep_list = []
         for i in range(1, number_of_sheep + 1):
             self.sheep_list.append(Sheep(i, random.uniform(-limit, limit), random.uniform(-limit, limit)))
@@ -50,8 +61,8 @@ class Simulation:
             alive_sheep = [sheep for sheep in self.sheep_list if sheep.is_live]
 
             self.wolf.move_wolf(alive_sheep, self.wolf_step)
-            # TODO: rename ewe -> candidate_sheep?
-            closest_sheep = min(alive_sheep, key=lambda ewe: self.wolf.distance_to_the_nearest_sheep(ewe))
+
+            closest_sheep = min(alive_sheep, key=lambda s: self.wolf.distance_to_the_nearest_sheep(s))
 
             json_dict = {
                 'round_no': round_num,
@@ -60,8 +71,6 @@ class Simulation:
             }
 
             json_data.append(json_dict)
-
-
 
             if math.dist([self.wolf.x, self.wolf.y], [closest_sheep.x, closest_sheep.y]) <= self.wolf_step:
                 # closest_sheep.is_live = False
@@ -74,14 +83,5 @@ class Simulation:
                 print('\033[92m' + "Wolf has eaten every sheep in the meadow. The end of simulation" + '\033[0m')
                 break
 
-            with open('alive.csv', 'a', newline='') as f_object:
-                writer_object = csv.writer(f_object)
-                writer_object.writerow([round_num, len(alive_sheep)])
-                f_object.close()
-
         with open('pos.json', 'w') as json_file:
             json.dump(json_data, json_file, indent=4)
-
-
-
-
