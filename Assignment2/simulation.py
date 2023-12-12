@@ -16,7 +16,8 @@ class Simulation:
 
     def display_summary(self, round_num, chasing_sheep=None, eaten_sheep=None):
 
-        print(f"Round: {round_num}")
+        #print(f'\033[94m' + "Round: {round_num} + '\033[0m'")
+        print('\033[96m' + f"Round: {round_num}" + '\033[0m')
         print(f"Wolf Position: ({self.wolf.x:.3f}, {self.wolf.y:.3f})")
 
         if chasing_sheep:
@@ -35,15 +36,39 @@ class Simulation:
 
             self.wolf.move_wolf([sheep for sheep in self.sheep_list if sheep.is_live], self.wolf_step)
 
-            closest_sheep = min([sheep for sheep in self.sheep_list if sheep.is_live], key=lambda sheep: self.wolf.distance_to_the_nearest_sheep(sheep))
+            self.wolf.move_wolf(alive_sheep, self.wolf_step)
+            # TODO: rename ewe -> candidate_sheep?
+            closest_sheep = min(alive_sheep, key=lambda ewe: self.wolf.distance_to_the_nearest_sheep(ewe))
 
-            if math.sqrt((self.wolf.x - closest_sheep.x) ** 2 + (self.wolf.y - closest_sheep.y) ** 2) <= self.wolf_step:
-                closest_sheep.is_live = False
+            json_dict = {
+                'round_no': round_num,
+                'wolf_pos': (self.wolf.x, self.wolf.y),
+                'sheep_pos': [(sheep.x, sheep.y) if sheep.is_live else None for sheep in self.sheep_list]
+            }
+
+            json_data.append(json_dict)
+
+
+
+            if math.dist([self.wolf.x, self.wolf.y], [closest_sheep.x, closest_sheep.y]) <= self.wolf_step:
+                # closest_sheep.is_live = False
                 self.display_summary(round_num, eaten_sheep=closest_sheep)
             else:
                 self.display_summary(round_num, chasing_sheep=closest_sheep)
 
-            #Condiotion of end game (idk why i think about avengers)
+            # Condiotion of end game (idk why i think about avengers)
             if sum(sheep.is_live for sheep in self.sheep_list) == 0:
-                print("Wolf has eaten every sheep in the meadow. The end of simulation")
+                print('\033[92m' + "Wolf has eaten every sheep in the meadow. The end of simulation" + '\033[0m')
                 break
+
+            with open('alive.csv', 'a', newline='') as f_object:
+                writer_object = csv.writer(f_object)
+                writer_object.writerow([round_num, len(alive_sheep)])
+                f_object.close()
+
+        with open('pos.json', 'w') as json_file:
+            json.dump(json_data, json_file, indent=4)
+
+
+
+

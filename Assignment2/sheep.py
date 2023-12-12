@@ -9,7 +9,6 @@ class Sheep:
         self.is_live = True
 
     def sheep_move(self, dist):
-        # TODO: change on like in instruction up ~ north, ect?
 
         direct = random.choice(['north', 'south', 'west', 'east'])
 

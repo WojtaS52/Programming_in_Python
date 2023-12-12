@@ -7,11 +7,11 @@ class Wolf:
         self.y = 0.0
 
     def distance_to_the_nearest_sheep(self, sheep):
-        dist = math.sqrt(((sheep.x - self.x)**2) + ((sheep.y - self.y)**2))
-        return dist
+        # return math.sqrt(((sheep.x - self.x)**2) + ((sheep.y - self.y)**2))
+        return math.dist([sheep.x, sheep.y], [self.x, self.y])
 
-    def move_wolf(self, sheeps_list, wolf_step):
-        nearest_sheep = min(sheeps_list, key=lambda sheep: self.distance_to_the_nearest_sheep(sheep))
+    def move_wolf(self, sheep_list, wolf_step):
+        nearest_sheep = min(sheep_list, key=lambda sheep: self.distance_to_the_nearest_sheep(sheep))
 
         if nearest_sheep:
 
