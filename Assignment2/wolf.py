@@ -19,7 +19,7 @@ class Wolf:
 
             # Check if sheep is in available are for attack :C
 
-            if wolf_step >= dist_to_sheep:
+            if dist_to_sheep <= wolf_step:
                 self.x = nearest_sheep.x
                 self.y = nearest_sheep.y
                 nearest_sheep.is_live = False       # :----(        tutaj nie wiem jeszcze

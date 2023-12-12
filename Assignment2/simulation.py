@@ -1,14 +1,20 @@
 import math
 
 from wolf import Wolf
-from Assignment2.sheep import Sheep
+from sheep import Sheep
 import random
+import json
+import csv
 
 
 class Simulation:
     def __init__(self, number_of_sheep: int, limit: float, wolf_step: float, sheep_step: float, max_rounds: int):
         print(f"Start simulation")
-        self.sheep_list = [Sheep(i, random.uniform(-limit, limit), random.uniform(-limit, limit)) for i in range(1, number_of_sheep + 1)]
+        # self.sheep_list = [Sheep(i, random.uniform(-limit, limit), random.uniform(-limit, limit)) for i in range(1, number_of_sheep + 1)]
+        self.sheep_list = []
+        for i in range(1, number_of_sheep + 1):
+            self.sheep_list.append(Sheep(i, random.uniform(-limit, limit), random.uniform(-limit, limit)))
+
         self.sheep_step = sheep_step
         self.wolf_step = wolf_step
         self.wolf = Wolf()
@@ -29,12 +35,19 @@ class Simulation:
         print(f"Number of Alive Sheep: {sum(sheep.is_live for sheep in self.sheep_list)}")
 
     def run(self):
+        with open('alive.csv', 'w', newline='') as f_object:
+            writer_object = csv.writer(f_object)
+            writer_object.writerow(['round', 'alive_sheep'])
+            f_object.close()
+
+        json_data = []
+
         for round_num in range(1, self.max_rounds + 1):
             for sheep in self.sheep_list:
                 if sheep.is_live:
                     sheep.sheep_move(self.sheep_step)
 
-            self.wolf.move_wolf([sheep for sheep in self.sheep_list if sheep.is_live], self.wolf_step)
+            alive_sheep = [sheep for sheep in self.sheep_list if sheep.is_live]
 
             self.wolf.move_wolf(alive_sheep, self.wolf_step)
             # TODO: rename ewe -> candidate_sheep?
