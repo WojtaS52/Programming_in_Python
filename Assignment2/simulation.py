@@ -33,17 +33,17 @@ class Simulation:
 
     def display_summary(self, round_num, chasing_sheep=None, eaten_sheep=None):
 
-        #print(f'\033[94m' + "Round: {round_num} + '\033[0m'")
-        print('\033[96m' + f"Round: {round_num}" + '\033[0m')
-        print(f"Wolf Position: ({self.wolf.x:.3f}, {self.wolf.y:.3f})")
+        # print(f'\033[94m' + "Round: {round_num} + '\033[0m'")
+        print('\033[96m' + f'Round: {round_num}' + '\033[0m')
+        print(f'Wolf Position: ({self.wolf.x:.3f}, {self.wolf.y:.3f})')
 
         if chasing_sheep:
-            print(f"Wolf is chasing Sheep number(sid) {chasing_sheep.sid}")
+            print(f'Wolf is chasing Sheep number(sid) {chasing_sheep.sid}')
 
         if eaten_sheep:
-            print(f"Sheep number(sid) {eaten_sheep.sid} has been eaten by wolf")
+            print(f'Sheep number(sid) {eaten_sheep.sid} has been eaten by wolf')
 
-        print(f"Number of Alive Sheep: {sum(sheep.is_live for sheep in self.sheep_list)}")
+        print(f'Number of Alive Sheep: {sum(sheep.is_live for sheep in self.sheep_list)} \n')
 
     def run(self):
         with open('alive.csv', 'w', newline='') as f_object:
@@ -78,9 +78,16 @@ class Simulation:
             else:
                 self.display_summary(round_num, chasing_sheep=closest_sheep)
 
-            # Condiotion of end game (idk why i think about avengers)
-            if sum(sheep.is_live for sheep in self.sheep_list) == 0:
-                print('\033[92m' + "Wolf has eaten every sheep in the meadow. The end of simulation" + '\033[0m')
+            number_of_alive_sheep = sum(sheep.is_live for sheep in self.sheep_list)
+
+            with open('alive.csv', 'a', newline='') as f_object:
+                writer_object = csv.writer(f_object)
+                writer_object.writerow([round_num, number_of_alive_sheep])
+                f_object.close()
+
+            # Condition of end game
+            if number_of_alive_sheep == 0:
+                print('\033[92m' + 'Wolf has eaten every sheep in the meadow. The end of simulation' + '\033[0m')
                 break
 
         with open('pos.json', 'w') as json_file:
