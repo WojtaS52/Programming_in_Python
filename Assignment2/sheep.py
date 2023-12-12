@@ -9,7 +9,6 @@ class Sheep:
         self.is_live = True
 
     def sheep_move(self, dist):
-
         direct = random.choice(['north', 'south', 'west', 'east'])
 
         if direct == 'north':

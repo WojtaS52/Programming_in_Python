@@ -9,19 +9,6 @@ import math
 class Simulation:
     def __init__(self, number_of_sheep: int, limit: float, wolf_step: float, sheep_step: float, max_rounds: int):
         print('Start simulation')
-
-        # if type(number_of_sheep) is not int:
-        #     raise Exception('Number of sheep must be an int')
-        #
-        # if type(number_of_sheep) is not int:
-        #     raise Exception('Number of sheep must be an int')
-        #
-        # if number_of_sheep <= 0:
-        #     raise Exception('Number of sheep should be positive')
-        #
-        # if max_rounds <= 0:
-        #     raise Exception('Max number of rounds should be positive')
-
         self.sheep_list = []
         for i in range(1, number_of_sheep + 1):
             self.sheep_list.append(Sheep(i, random.uniform(-limit, limit), random.uniform(-limit, limit)))
@@ -32,8 +19,6 @@ class Simulation:
         self.max_rounds = max_rounds
 
     def display_summary(self, round_num, chasing_sheep=None, eaten_sheep=None):
-
-        # print(f'\033[94m' + "Round: {round_num} + '\033[0m'")
         print('\033[96m' + f'Round: {round_num}' + '\033[0m')
         print(f'Wolf Position: ({self.wolf.x:.3f}, {self.wolf.y:.3f})')
 
@@ -73,7 +58,6 @@ class Simulation:
             json_data.append(json_dict)
 
             if math.dist([self.wolf.x, self.wolf.y], [closest_sheep.x, closest_sheep.y]) <= self.wolf_step:
-                # closest_sheep.is_live = False
                 self.display_summary(round_num, eaten_sheep=closest_sheep)
             else:
                 self.display_summary(round_num, chasing_sheep=closest_sheep)
