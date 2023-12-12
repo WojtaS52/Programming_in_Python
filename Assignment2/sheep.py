@@ -11,13 +11,13 @@ class Sheep:
     def sheep_move(self, dist):
         # TODO: change on like in instruction up ~ north, ect?
 
-        direct = random.choice(['up', 'down', 'left', 'right'])
+        direct = random.choice(['north', 'south', 'west', 'east'])
 
-        if direct == 'up':
+        if direct == 'north':
             self.y = self.y + dist
-        elif direct == 'down':
+        elif direct == 'south':
             self.y = self.y - dist
-        elif direct == 'left':
+        elif direct == 'west':
             self.x = self.x - dist
-        elif direct == 'right':
+        elif direct == 'east':
             self.x = self.x + dist
