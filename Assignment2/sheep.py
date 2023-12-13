@@ -6,7 +6,7 @@ class Sheep:
         self.sid = sid
         self.x = x
         self.y = y
-        self.is_live = True
+        self.is_alive = True
 
     def sheep_move(self, dist):
         direct = random.choice(['north', 'south', 'west', 'east'])

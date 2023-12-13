@@ -3,7 +3,6 @@ from sheep import Sheep
 import random
 import json
 import csv
-import math
 
 
 class Simulation:
@@ -28,46 +27,42 @@ class Simulation:
         if eaten_sheep:
             print(f'Sheep number(sid) {eaten_sheep.sid} has been eaten by wolf')
 
-        print(f'Number of Alive Sheep: {sum(sheep.is_live for sheep in self.sheep_list)} \n')
+        print(f'Number of Alive Sheep: {sum(sheep.is_alive for sheep in self.sheep_list)}\n')
 
     def run(self):
-        with open('alive.csv', 'w', newline='') as f_object:
-            writer_object = csv.writer(f_object)
+        with open('alive.csv', 'w', newline='') as f_csv:
+            writer_object = csv.writer(f_csv)
             writer_object.writerow(['round', 'alive_sheep'])
-            f_object.close()
 
         json_data = []
 
         for round_num in range(1, self.max_rounds + 1):
             for sheep in self.sheep_list:
-                if sheep.is_live:
+                if sheep.is_alive:
                     sheep.sheep_move(self.sheep_step)
 
-            alive_sheep = [sheep for sheep in self.sheep_list if sheep.is_live]
+            alive_sheep = [sheep for sheep in self.sheep_list if sheep.is_alive]
 
-            self.wolf.move_wolf(alive_sheep, self.wolf_step)
-
-            closest_sheep = min(alive_sheep, key=lambda s: self.wolf.distance_to_the_nearest_sheep(s))
+            closest_sheep = self.wolf.move_wolf(alive_sheep, self.wolf_step)
 
             json_dict = {
                 'round_no': round_num,
                 'wolf_pos': (self.wolf.x, self.wolf.y),
-                'sheep_pos': [(sheep.x, sheep.y) if sheep.is_live else None for sheep in self.sheep_list]
+                'sheep_pos': [(sheep.x, sheep.y) if sheep.is_alive else None for sheep in self.sheep_list]
             }
 
             json_data.append(json_dict)
 
-            if math.dist([self.wolf.x, self.wolf.y], [closest_sheep.x, closest_sheep.y]) <= self.wolf_step:
+            if not closest_sheep.is_alive:
                 self.display_summary(round_num, eaten_sheep=closest_sheep)
             else:
                 self.display_summary(round_num, chasing_sheep=closest_sheep)
 
-            number_of_alive_sheep = sum(sheep.is_live for sheep in self.sheep_list)
+            number_of_alive_sheep = sum(sheep.is_alive for sheep in self.sheep_list)
 
-            with open('alive.csv', 'a', newline='') as f_object:
-                writer_object = csv.writer(f_object)
+            with open('alive.csv', 'a', newline='') as f_csv:
+                writer_object = csv.writer(f_csv)
                 writer_object.writerow([round_num, number_of_alive_sheep])
-                f_object.close()
 
             # Condition of end game
             if number_of_alive_sheep == 0:
