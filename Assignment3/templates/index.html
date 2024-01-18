@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <a href="{{ url_for('add') }}">Add Page</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Feature 1</th>
+                <th>Feature 2</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in data %}
+                <tr>
+                    <td>{{ record.id }}</td>
+                    <td>{{ record.feature1 }}</td>
+                    <td>{{ record.feature2 }}</td>
+                    <td>{{ record.category }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('delete', record_id=record.id) }}">
+                            <button>Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

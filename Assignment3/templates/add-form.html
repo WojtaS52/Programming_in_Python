@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add</title>
+    <style>
+        .flashes {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <a href="{{ url_for('all_data') }}">Home Page</a>
+    <form method="POST" action="{{ url_for('add') }}">
+        <label for="feature1">Feature 1</label>
+        <input name="feature1" type="text">
+        <label for="feature2">Feature 2</label>
+        <input name="feature2" type="text">
+        <label for="category">category</label>
+        <input name="category" type="text">
+        <button>Add</button>
+    </form>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
